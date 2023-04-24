@@ -1,4 +1,4 @@
-**django-sqlcipher**
+**django-database-cipher**
 
 SQLCipher is an SQLite extension that provides transparent 256-bit AES encryption of database files.
 
@@ -10,15 +10,13 @@ For more about SQLCipher take a look at [http://sqlcipher.net/](http://sqlcipher
 
 **Requirements**
 
-* python-sqlcipher (Python compiled with SQLCipher support)
-
-For more about python-sqlcipher take a look at:
-
-[https://code.launchpad.net/~jplacerda/+junk/python-sqlcipher](https://code.launchpad.net/~jplacerda/+junk/python-sqlcipher)
+* libsqlcipher (pysqlcipher deepend on this library)
+* pysqlcipher3 (Python3 compiled with SQLCipher support)
+* django
 
 **Installation**
 
-`pip install git+http://github.com/codasus/django-sqlcipher#egg=sqlcipher`
+`pip install django-database-cipher`
 
 Or manually place it on your `PYTHON_PATH`.
 
@@ -26,13 +24,13 @@ Or manually place it on your `PYTHON_PATH`.
 
 Open your project's `settings.py` file and:
 
-1. Append `sqlcipher` to your `INSTALLED_APPS`.
+1. Append `django_database_cipher` to your `INSTALLED_APPS`.
 
-2. Set your database engine to `sqlcipher.backend`.
+2. Set your database engine to `django_database_cipher.backends.sqlite3`.
 
 3. Put the following line where you want:
 
-    `PRAGMA_KEY = "YOUR DATABASE KEY"`
+   `PRAGMA_KEY = "YOUR DATABASE KEY"`
 
 **MIT License**
 
