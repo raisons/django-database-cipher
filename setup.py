@@ -1,29 +1,59 @@
-from distutils.core import setup
-from distutils.command.install import INSTALL_SCHEMES
+from setuptools import setup
+import re
 import os
 
-root = os.path.dirname(os.path.abspath(__file__))
-os.chdir(root)
 
-VERSION = '0.1.1'
+def get_version(package):
+    """
+    Return package version as listed in `__version__` in `init.py`.
+    """
+    init_py = open(os.path.join(package, '__init__.py')).read()
+    return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
 
-# Make data go to the right place.
-# http://groups.google.com/group/comp.lang.python/browse_thread/thread/35ec7b2fed36eaec/2105ee4d9e8042cb
-for scheme in INSTALL_SCHEMES.values():
-    scheme['data'] = scheme['purelib']
 
+def get_packages(package):
+    """
+    Return root package and all sub-packages.
+    """
+    return [dirpath
+            for dirpath, dirnames, filenames in os.walk(package)
+            if os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+
+def get_package_data(package):
+    """
+    Return all files under the root package, that are not in a
+    package themselves.
+    """
+    walk = [(dirpath.replace(package + os.sep, '', 1), filenames)
+            for dirpath, dirnames, filenames in os.walk(package)
+            if not os.path.exists(os.path.join(dirpath, '__init__.py'))]
+
+    filepaths = []
+    for base, filenames in walk:
+        filepaths.extend([os.path.join(base, filename)
+                          for filename in filenames])
+    return {package: filepaths}
+
+
+version = get_version('django_database_cipher')
 
 setup(
-    name='django-sqlcipher',
-    version=VERSION,
-    description="SQLCipher support for Django",
+    name='django-database-cipher',
+    version=version,
+    description="Database cipher support for Django",
     long_description="This module allows your Django project to work with SQLCipher.",
-    author="Codasus Technologies",
-    author_email="contact@codasus.com",
-    url="http://github.com/codasus/django-sqlcipher",
-    license="Creative Commons Attribution-ShareAlike 3.0 Unported License",
+    author="Raison Chan",
+    author_email="raisonschan@gmail.com",
+    url="https://github.com/raisons/django-database-cipher",
+    license="MIT",
     platforms=["any"],
-    packages=['sqlcipher'],
+    install_requires=[
+        # 'django>=3.1',
+        # 'pysqlcipher3'
+    ],
+    packages=get_packages('django_database_cipher'),
+    package_data=get_package_data('django_database_cipher'),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: Django",
